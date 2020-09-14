@@ -11,22 +11,22 @@ import (
 func importData() {
 	timer := time.Now()
 	logInfo("MAIN", "Importing process started")
-	zapsiUsers, downloadedFromZapsi := DownloadDataFromZapsi()
-	downloadedFromCsvFile := DownloadDataFromCsvFile()
+	zapsiUsers, downloadedFromZapsi := downloadDataFromZapsi()
+	downloadedFromCsvFile := downloadDataFromCsvFile()
 	if downloadedFromZapsi && downloadedFromCsvFile {
 		sort.Slice(zapsiUsers, func(i, j int) bool { return zapsiUsers[i].Login <= zapsiUsers[j].Login })
 		logInfo("MAIN", "Zapsi Users: "+strconv.Itoa(len(zapsiUsers)))
-		UpdateUsers()
-		UpdateProducts()
+		updateUsers()
+		updateProducts()
 	}
 	logInfo("MAIN", "Importing process complete, time elapsed: "+time.Since(timer).String())
 }
 
-func UpdateProducts() {
+func updateProducts() {
 
 }
 
-func UpdateUsers() {
+func updateUsers() {
 	timer := time.Now()
 	logInfo("MAIN", "Updating users")
 	//for _, heliosUser := range heliosUsers {
@@ -100,14 +100,14 @@ func UpdateUsers() {
 //	return index, userInZapsi
 //}
 
-func DownloadDataFromCsvFile() (bool) {
+func downloadDataFromCsvFile() bool {
 	timer := time.Now()
 	logInfo("MAIN", "Downloading users from Helios")
 	logInfo("MAIN", "Helios users downloaded, time elapsed: "+time.Since(timer).String())
 	return true
 }
 
-func DownloadDataFromZapsi() ([]user, bool) {
+func downloadDataFromZapsi() ([]user, bool) {
 	timer := time.Now()
 	logInfo("MAIN", "Downloading users from Zapsi")
 	db, err := gorm.Open(mysql.Open(zapsiConfig), &gorm.Config{})
