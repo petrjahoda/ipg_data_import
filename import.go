@@ -1,8 +1,12 @@
 package main
 
 import (
+	"encoding/csv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"io"
+	"os"
+	"path/filepath"
 	"sort"
 	"strconv"
 	"time"
@@ -11,34 +15,52 @@ import (
 func importData() {
 	timer := time.Now()
 	logInfo("MAIN", "Importing process started")
-	zapsiUsers, downloadedFromZapsi := downloadDataFromZapsi()
-	downloadedFromCsvFile := downloadDataFromCsvFile()
+	zapsiUsers, zapsiProducts, downloadedFromZapsi := downloadDataFromZapsi()
+	csvUsers, csvProducts, downloadedFromCsvFile := downloadDataFromCsvFile()
 	if downloadedFromZapsi && downloadedFromCsvFile {
 		sort.Slice(zapsiUsers, func(i, j int) bool { return zapsiUsers[i].Login <= zapsiUsers[j].Login })
 		logInfo("MAIN", "Zapsi Users: "+strconv.Itoa(len(zapsiUsers)))
-		updateUsers()
-		updateProducts()
+		updateUsers(zapsiUsers, csvUsers)
+		updateProducts(zapsiProducts, csvProducts)
 	}
 	logInfo("MAIN", "Importing process complete, time elapsed: "+time.Since(timer).String())
 }
 
-func updateProducts() {
-
+func updateProducts(zapsiProducts []product, csvProducts []csvProduct) {
+	timer := time.Now()
+	logInfo("MAIN", "Updating products")
+	for _, csvProduct := range csvProducts {
+		if serviceRunning {
+			index, userInZapsi := BinarySearchProduct(zapsiProducts, csvProduct)
+			if userInZapsi {
+				UpdateProductInZapsi(csvProduct, zapsiProducts[index])
+			} else {
+				CreateProductInZapsi(csvProduct)
+			}
+		}
+	}
+	logInfo("MAIN", "Products updated, time elapsed: "+time.Since(timer).String())
 }
 
-func updateUsers() {
+func BinarySearchProduct(zapsiProducts []product, csvProduct csvProduct) (interface{}, interface{}) {
+	index := sort.Search(len(zapsiProducts), func(i int) bool { return zapsiProducts[i].Login >= csvProduct.Cislo })
+	userInZapsi := index < len(zapsiProducts) && zapsiProducts[index].Login == csvProduct.Cislo
+	return index, userInZapsi
+}
+
+func updateUsers(zapsiUsers []user, csvUsers []csvUser) {
 	timer := time.Now()
 	logInfo("MAIN", "Updating users")
-	//for _, heliosUser := range heliosUsers {
-	//	if serviceRunning {
-	//		index, userInZapsi := BinarySearchUser(zapsiUsers, heliosUser)
-	//		if userInZapsi {
-	//			UpdateUserInZapsi(heliosUser, zapsiUsers[index])
-	//		} else {
-	//			CreateUserInZapsi(heliosUser)
-	//		}
-	//	}
-	//}
+	for _, csvUser := range csvUsers {
+		if serviceRunning {
+			index, userInZapsi := BinarySearchUser(zapsiUsers, csvUser)
+			if userInZapsi {
+				UpdateUserInZapsi(csvUser, zapsiUsers[index])
+			} else {
+				CreateUserInZapsi(csvUser)
+			}
+		}
+	}
 	logInfo("MAIN", "Users updated, time elapsed: "+time.Since(timer).String())
 }
 
@@ -94,31 +116,65 @@ func updateUsers() {
 //	return
 //}
 //
-//func BinarySearchUser(zapsiUsers []user, heliosUser hvw_Zamestnanci) (int, bool) {
-//	index := sort.Search(len(zapsiUsers), func(i int) bool { return zapsiUsers[i].Login >= heliosUser.Cislo })
-//	userInZapsi := index < len(zapsiUsers) && zapsiUsers[index].Login == heliosUser.Cislo
-//	return index, userInZapsi
-//}
-
-func downloadDataFromCsvFile() bool {
-	timer := time.Now()
-	logInfo("MAIN", "Downloading users from Helios")
-	logInfo("MAIN", "Helios users downloaded, time elapsed: "+time.Since(timer).String())
-	return true
+func BinarySearchUser(zapsiUsers []user, csvUser csvUser) (int, bool) {
+	index := sort.Search(len(zapsiUsers), func(i int) bool { return zapsiUsers[i].Login >= heliosUser.Cislo })
+	userInZapsi := index < len(zapsiUsers) && zapsiUsers[index].Login == heliosUser.Cislo
+	return index, userInZapsi
 }
 
-func downloadDataFromZapsi() ([]user, bool) {
+func downloadDataFromCsvFile() ([]csvUser, []csvProduct, bool) {
 	timer := time.Now()
-	logInfo("MAIN", "Downloading users from Zapsi")
+	logInfo("MAIN", "Downloading data from Csv")
+	var files []string
+	root := "E:/"
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		files = append(files, path)
+		return nil
+	})
+	if err != nil {
+		println(err.Error())
+	}
+	for _, file := range files {
+		csvFile, err := os.Open(file)
+		if err != nil {
+			println("Cannot open file: " + err.Error())
+		} else {
+			r := csv.NewReader(csvFile)
+			r.Comma = ';'
+			for {
+				record, err := r.Read()
+				if err == io.EOF {
+					break
+				}
+				if err != nil {
+					println("Cannot read file: " + err.Error())
+					break
+				}
+				for _, data := range record {
+					print(data + " ")
+				}
+				println("")
+			}
+		}
+	}
+	logInfo("MAIN", "Csv data downloaded, time elapsed: "+time.Since(timer).String())
+	return []csvUser{}, []csvProduct{}, true
+}
+
+func downloadDataFromZapsi() ([]user, []product, bool) {
+	timer := time.Now()
+	logInfo("MAIN", "Downloading data from Zapsi")
 	db, err := gorm.Open(mysql.Open(zapsiConfig), &gorm.Config{})
 	if err != nil {
 		logError("MAIN", "Problem opening database: "+err.Error())
-		return []user{}, false
+		return []user{}, []product{}, false
 	}
 	sqlDB, err := db.DB()
 	defer sqlDB.Close()
 	var users []user
 	db.Find(&users)
-	logInfo("MAIN", "Zapsi users downloaded, time elapsed: "+time.Since(timer).String())
-	return users, true
+	var products []product
+	db.Find(&products)
+	logInfo("MAIN", "Zapsi data downloaded, time elapsed: "+time.Since(timer).String())
+	return users, products, true
 }
