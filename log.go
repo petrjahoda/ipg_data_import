@@ -6,20 +6,19 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"time"
 )
 
 func logInfo(reference, data string) {
 	fmt.Println(color.Ize(color.Green, "["+reference+"] --INF-- "+data))
-	AppendDataToLog("INF", reference, data)
+	appendDataToLog("INF", reference, data)
 }
 
 func logError(reference, data string) {
 	fmt.Println(color.Ize(color.Red, "["+reference+"] --ERR-- "+data))
-	AppendDataToLog("ERR", reference, data)
-	AppendDataToErrLog("ERR", reference, data)
+	appendDataToLog("ERR", reference, data)
+	appendDataToErrLog("ERR", reference, data)
 }
 
 func logDirectoryFileCheck(reference string) {
@@ -40,7 +39,7 @@ func logDirectoryFileCheck(reference string) {
 	}
 }
 
-func AppendDataToLog(logLevel string, reference string, data string) {
+func appendDataToLog(logLevel string, reference string, data string) {
 	dateTimeFormat := "2006-01-02 15:04:05.000"
 	logNameDateTimeFormat := "2006-01-02"
 	logDirectory := filepath.Join(".", "log")
@@ -58,7 +57,7 @@ func AppendDataToLog(logLevel string, reference string, data string) {
 	}
 }
 
-func AppendDataToErrLog(logLevel string, reference string, data string) {
+func appendDataToErrLog(logLevel string, reference string, data string) {
 	dateTimeFormat := "2006-01-02 15:04:05.000"
 	logNameDateTimeFormat := "2006-01-02"
 	logDirectory := filepath.Join(".", "log")
@@ -76,7 +75,7 @@ func AppendDataToErrLog(logLevel string, reference string, data string) {
 	}
 }
 
-func DeleteOldLogFiles() {
+func deleteOldLogFiles() {
 	logInfo("MAIN", "Deleting old log files")
 	timer := time.Now()
 	directory, err := ioutil.ReadDir("log")
@@ -97,18 +96,4 @@ func DeleteOldLogFiles() {
 		}
 	}
 	logInfo("MAIN", "Old log files deleted, elapsed: "+time.Since(timer).String())
-}
-
-func GetDirectory() string {
-	var dir string
-	if runtime.GOOS == "windows" {
-		executable, err := os.Executable()
-		if err != nil {
-			panic(err)
-		}
-		dir = filepath.Dir(executable)
-	} else {
-		dir, _ = os.Getwd()
-	}
-	return dir
 }

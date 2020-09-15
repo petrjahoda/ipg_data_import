@@ -8,7 +8,7 @@ import (
 const version = "2020.3.3.15"
 const serviceName = "IPG Data Import Service"
 const serviceDescription = "Download users and products from CSV file and imports them into Zapsi database"
-const downloadInSeconds = 60
+const downloadInSeconds = 600
 const deleteLogsAfter = 240 * time.Hour
 
 var serviceRunning = false
@@ -65,6 +65,7 @@ func (p *program) run() {
 		sleepTime := downloadInSeconds*time.Second - time.Since(start)
 		logInfo("MAIN", "Sleeping for "+sleepTime.String())
 		time.Sleep(sleepTime)
+		deleteOldLogFiles()
 		processRunning = false
 	}
 }
