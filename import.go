@@ -40,7 +40,7 @@ func updateProducts(zapsiProducts map[string]product, csvProducts []csvProduct) 
 	created := 0
 	for _, csvProduct := range csvProducts {
 		if serviceRunning {
-			productInZapsi := zapsiProducts[csvProduct.kodProduktu].OID > 0
+			_, productInZapsi := zapsiProducts[csvProduct.kodProduktu]
 			if productInZapsi {
 				updateProductInZapsi(csvProduct)
 				updated++
@@ -164,7 +164,7 @@ func updateUsers(zapsiUsers map[string]user, csvUsers []csvUser) (int, int) {
 	created := 0
 	for _, csvUser := range csvUsers {
 		if serviceRunning {
-			userInZapsi := zapsiUsers[csvUser.osobniCislo].OID > 0
+			_, userInZapsi := zapsiUsers[csvUser.osobniCislo]
 			if userInZapsi {
 				updateUserInZapsi(csvUser, zapsiUsers[csvUser.osobniCislo])
 				updated++
