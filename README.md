@@ -7,6 +7,10 @@ Go service that downloads user and product data from CSV and updates/creates use
 * CSV directory: \\server-zapsi\zapsi_ipg_data
    * user file has to have 'zam' in its name
    * product file has to have 'prod' in its name
+* service created with ``sc.exe CREATE ipg_data_import_service binpath="c:\Zapsi\ipg_data_import_service
+\ipg_data_import_service_windows.exe"``
+    * added automatic startup
+    * security changed to run under "Zapsi" user
    
 ### User mapping:
 

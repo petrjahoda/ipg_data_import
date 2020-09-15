@@ -18,7 +18,8 @@ type Config struct {
 }
 
 func createConfigIfNotExists() {
-	configDirectory := filepath.Join(".", "config")
+	dir := GetDirectory()
+	configDirectory := filepath.Join(dir, "config")
 	configFileName := "config.json"
 	configFullPath := strings.Join([]string{configDirectory, configFileName}, "/")
 	if _, checkPathError := os.Stat(configFullPath); checkPathError == nil {
@@ -53,7 +54,8 @@ func createConfigIfNotExists() {
 }
 
 func loadSettingsFromConfigFile() {
-	configDirectory := filepath.Join(".", "config")
+	dir := GetDirectory()
+	configDirectory := filepath.Join(dir, "config")
 	configFileName := "config.json"
 	configFullPath := strings.Join([]string{configDirectory, configFileName}, "/")
 	ConfigFile := Config{}

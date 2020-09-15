@@ -22,6 +22,7 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 
 ### Changed
 - comparing using map, because it is faster, better with big O(1)
+- logging to proper folder when running as windows service
 
 ## [2020.3.3.14] - 2020-9-14
 
