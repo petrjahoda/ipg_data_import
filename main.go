@@ -5,14 +5,15 @@ import (
 	"time"
 )
 
-const version = "2020.3.3.14"
+const version = "2020.3.3.15"
 const serviceName = "IPG Data Import Service"
 const serviceDescription = "Download users and products from CSV file and imports them into Zapsi database"
-const zapsiConfig = "zapsi_uzivatel:zapsi@tcp(zapsidatabase:3306)/zapsi2?charset=utf8mb4&parseTime=True&loc=Local"
 const downloadInSeconds = 60
+const deleteLogsAfter = 240 * time.Hour
 
 var serviceRunning = false
 var processRunning = false
+var zapsiConfig = "zapsi_uzivatel:zapsi@tcp(localhost:3306)/zapsi2?charset=utf8&parseTime=True&loc=Local"
 
 type program struct{}
 
@@ -53,6 +54,9 @@ func (p *program) Stop(service.Service) error {
 }
 
 func (p *program) run() {
+	logDirectoryFileCheck("MAIN")
+	createConfigIfNotExists()
+	loadSettingsFromConfigFile()
 	for serviceRunning {
 		processRunning = true
 		start := time.Now()

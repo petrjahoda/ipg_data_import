@@ -1,9 +1,7 @@
-# Linaplast User Import Service
-
+# IPG Data Import Service
 
 ## Description
-Go service that download users data from Helios and updates/creates users in Zapsi
+Go service that download user and product data from CSV and updates/creates users and products in Zapsi
 
-Docker image here: https://hub.docker.com/r/petrjahoda/linaplast_userimport
 
 © 2020 Petr Jahoda

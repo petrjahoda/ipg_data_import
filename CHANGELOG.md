@@ -14,6 +14,15 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 * ```Fixed``` for any bug fixes.
 * ```Security``` in case of vulnerabilities.
 
+## [2020.3.3.15] - 2020-9-15
+
+### Added
+- complete funcitonality
+- windows binary
+
+### Changed
+- comparing using map, because it is faster, better with big O(1)
+
 ## [2020.3.3.14] - 2020-9-14
 
 ### Added
