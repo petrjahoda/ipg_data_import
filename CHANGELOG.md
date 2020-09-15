@@ -17,7 +17,7 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 ## [2020.3.3.15] - 2020-9-15
 
 ### Added
-- complete funcitonality
+- complete functionality
 - windows binary
 
 ### Changed
