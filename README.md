@@ -8,7 +8,7 @@ Go service that downloads user and product data from CSV and updates/creates use
    * user file has to have 'zam' in its name
    * product file has to have 'prod' in its name
 * 
-
+;;
 ###User mapping:
 
 |CSV Name|ZapsiName user table|
