@@ -7,9 +7,8 @@ Go service that downloads user and product data from CSV and updates/creates use
 * CSV directory: \\server-zapsi\zapsi_ipg_data
    * user file has to have 'zam' in its name
    * product file has to have 'prod' in its name
-* 
-;;
-###User mapping:
+   
+### User mapping:
 
 |CSV Name|ZapsiName user table|
 |------------------|------------------|
