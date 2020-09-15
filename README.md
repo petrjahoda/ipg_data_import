@@ -14,7 +14,7 @@ Go service that downloads user and product data from CSV and updates/creates use
    
 ### User mapping:
 
-|CSV Name|ZapsiName user table|
+|CSV Name|Zapsi Name, user table|
 |------------------|------------------|
 |-|FirstName|
 |Jméno|Name|
@@ -30,7 +30,7 @@ Go service that downloads user and product data from CSV and updates/creates use
 
 ### Product mapping:
     
-|CSV Name|ZapsiName, product table|
+|CSV Name|Zapsi Name, product table|
 |------------------|------------------|
 |název produktu|Name|
 |kód produktu|Barcode|
