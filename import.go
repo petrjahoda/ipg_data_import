@@ -23,8 +23,8 @@ func importData() {
 		logInfo("MAIN", "Zapsi Products: "+strconv.Itoa(len(zapsiProducts)))
 		logInfo("MAIN", "CSV Users: "+strconv.Itoa(len(csvUsers)))
 		logInfo("MAIN", "CSV Products: "+strconv.Itoa(len(csvProducts)))
-		updatedUsers, createdUsers := updateUsers(zapsiUsers, csvUsers)
-		updatedProducts, createdProducts := updateProducts(zapsiProducts, csvProducts)
+		updatedUsers, createdUsers := processUsers(zapsiUsers, csvUsers)
+		updatedProducts, createdProducts := processProducts(zapsiProducts, csvProducts)
 		logInfo("MAIN", "Updated users: "+strconv.Itoa(updatedUsers))
 		logInfo("MAIN", "Created users: "+strconv.Itoa(createdUsers))
 		logInfo("MAIN", "Updated products: "+strconv.Itoa(updatedProducts))
@@ -33,9 +33,9 @@ func importData() {
 	logInfo("MAIN", "Importing process complete, time elapsed: "+time.Since(timer).String())
 }
 
-func updateProducts(zapsiProducts map[string]product, csvProducts []csvProduct) (int, int) {
+func processProducts(zapsiProducts map[string]product, csvProducts []csvProduct) (int, int) {
 	timer := time.Now()
-	logInfo("MAIN", "Updating products")
+	logInfo("MAIN", "Processing products")
 	updated := 0
 	created := 0
 	for _, csvProduct := range csvProducts {
@@ -50,7 +50,7 @@ func updateProducts(zapsiProducts map[string]product, csvProducts []csvProduct) 
 			}
 		}
 	}
-	logInfo("MAIN", "Products updated, time elapsed: "+time.Since(timer).String())
+	logInfo("MAIN", "Products processed, time elapsed: "+time.Since(timer).String())
 	return updated, created
 }
 
@@ -68,10 +68,10 @@ func createProductInZapsi(csvProduct csvProduct) {
 	if err != nil {
 		cavityAsInt = 0
 	}
-	cycleAsInt, err := strconv.Atoi(csvProduct.casCyklu)
+	cycleAsInt, err := strconv.Atoi(strings.ReplaceAll(csvProduct.casCyklu, ",", "."))
 	var cycleAsFloat float64
 	if err != nil {
-		cycleAsFloat, err = strconv.ParseFloat(csvProduct.casCyklu, 64)
+		cycleAsFloat, err = strconv.ParseFloat(strings.ReplaceAll(csvProduct.casCyklu, ",", "."), 64)
 		if err != nil {
 			cycleAsFloat = 0.0
 		}
@@ -101,10 +101,10 @@ func updateProductInZapsi(csvProduct csvProduct) {
 	if err != nil {
 		cavityAsInt = 0
 	}
-	cycleAsInt, err := strconv.Atoi(csvProduct.casCyklu)
+	cycleAsInt, err := strconv.Atoi(strings.ReplaceAll(csvProduct.casCyklu, ",", "."))
 	var cycleAsFloat float64
 	if err != nil {
-		cycleAsFloat, err = strconv.ParseFloat(csvProduct.casCyklu, 64)
+		cycleAsFloat, err = strconv.ParseFloat(strings.ReplaceAll(csvProduct.casCyklu, ",", "."), 64)
 		if err != nil {
 			cycleAsFloat = 0.0
 		}
@@ -157,9 +157,9 @@ func getProductGroupId(csvProduct csvProduct) int {
 	return 1
 }
 
-func updateUsers(zapsiUsers map[string]user, csvUsers []csvUser) (int, int) {
+func processUsers(zapsiUsers map[string]user, csvUsers []csvUser) (int, int) {
 	timer := time.Now()
-	logInfo("MAIN", "Updating users")
+	logInfo("MAIN", "Processing users")
 	updated := 0
 	created := 0
 	for _, csvUser := range csvUsers {
@@ -174,7 +174,7 @@ func updateUsers(zapsiUsers map[string]user, csvUsers []csvUser) (int, int) {
 			}
 		}
 	}
-	logInfo("MAIN", "Users updated, time elapsed: "+time.Since(timer).String())
+	logInfo("MAIN", "Users processed, time elapsed: "+time.Since(timer).String())
 	return updated, created
 }
 

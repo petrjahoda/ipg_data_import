@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-const version = "2020.3.3.15"
+const version = "2020.3.3.18"
 const serviceName = "IPG Data Import Service"
 const serviceDescription = "Download users and products from CSV file and imports them into Zapsi database"
 const downloadInSeconds = 600
