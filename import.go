@@ -357,13 +357,10 @@ func downloadDataFromZapsi() (map[string]user, map[string]product, bool) {
 	timer := time.Now()
 	logInfo("MAIN", "Downloading data from Zapsi")
 	db, err := gorm.Open(mysql.Open(zapsiConfig), &gorm.Config{})
-	var returnProducts map[string]product
-	var returnUsers map[string]user
-	returnProducts = make(map[string]product)
-	returnUsers = make(map[string]user)
+
 	if err != nil {
 		logError("MAIN", "Problem opening database: "+err.Error())
-		return returnUsers, returnProducts, false
+		return nil, nil, false
 	}
 	sqlDB, err := db.DB()
 	defer sqlDB.Close()
@@ -371,6 +368,8 @@ func downloadDataFromZapsi() (map[string]user, map[string]product, bool) {
 	var products []product
 	db.Find(&users)
 	db.Find(&products)
+	returnProducts := make(map[string]product, len(products))
+	returnUsers := make(map[string]user, len(users))
 	for _, product := range products {
 		returnProducts[product.Barcode] = product
 	}
