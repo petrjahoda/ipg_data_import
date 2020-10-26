@@ -58,12 +58,13 @@ func createProductInZapsi(csvProduct csvProduct) {
 	logInfo("MAIN", csvProduct.nazevProduktu+": Product does not exist in Zapsi, creating...")
 	productGroupId := getProductGroupId(csvProduct)
 	db, err := gorm.Open(mysql.Open(zapsiConfig), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError("MAIN", "Problem opening database: "+err.Error())
 		return
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
+
 	cavityAsInt, err := strconv.Atoi(csvProduct.kavita)
 	if err != nil {
 		cavityAsInt = 0
@@ -91,12 +92,12 @@ func createProductInZapsi(csvProduct csvProduct) {
 func updateProductInZapsi(csvProduct csvProduct) {
 	productGroupId := getProductGroupId(csvProduct)
 	db, err := gorm.Open(mysql.Open(zapsiConfig), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError("MAIN", "Problem opening database: "+err.Error())
 		return
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
 	cavityAsInt, err := strconv.Atoi(csvProduct.kavita)
 	if err != nil {
 		cavityAsInt = 0
@@ -122,12 +123,12 @@ func updateProductInZapsi(csvProduct csvProduct) {
 
 func getProductGroupId(csvProduct csvProduct) int {
 	db, err := gorm.Open(mysql.Open(zapsiConfig), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError("MAIN", "Problem opening database: "+err.Error())
 		return 1
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
 	var existingProductGroup productGroup
 	db.Where("Name like ?", csvProduct.skupinaProduktu).Find(&existingProductGroup)
 	if existingProductGroup.OID > 0 {
@@ -180,12 +181,12 @@ func processUsers(zapsiUsers map[string]user, csvUsers []csvUser) (int, int) {
 
 func updateUserInZapsi(csvUser csvUser, zapsiUser user) {
 	db, err := gorm.Open(mysql.Open(zapsiConfig), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError("MAIN", "Problem opening database: "+err.Error())
 		return
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
 	userTypeIdToInsert := getUserTypeID(csvUser)
 	rfidInDecimal := getRfidInHex(csvUser.rfidKod)
 	db.Model(&user{}).Where(user{Login: zapsiUser.Login}).Updates(user{
@@ -239,12 +240,12 @@ func getUserTypeID(csvUser csvUser) int {
 func createUserInZapsi(csvUser csvUser) {
 	logInfo("MAIN", csvUser.jmeno+": User does not exist in Zapsi, creating...")
 	db, err := gorm.Open(mysql.Open(zapsiConfig), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError("MAIN", "Problem opening database: "+err.Error())
 		return
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
 	userTypeIdToInsert := getUserTypeID(csvUser)
 	rfidInDecimal := getRfidInHex(csvUser.rfidKod)
 	var user user
@@ -357,13 +358,12 @@ func downloadDataFromZapsi() (map[string]user, map[string]product, bool) {
 	timer := time.Now()
 	logInfo("MAIN", "Downloading data from Zapsi")
 	db, err := gorm.Open(mysql.Open(zapsiConfig), &gorm.Config{})
-
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError("MAIN", "Problem opening database: "+err.Error())
 		return nil, nil, false
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
 	var users []user
 	var products []product
 	db.Find(&users)
