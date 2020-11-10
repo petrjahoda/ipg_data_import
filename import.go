@@ -127,7 +127,6 @@ func getProductGroupId(csvProduct csvProduct) int {
 		logError("MAIN", "Problem parsing cavity for "+csvProduct.nazevProduktu+": "+csvProduct.kavita)
 		prepareTimeAsFloat = 0.0
 	}
-	logInfo("MAIN", "Product group "+csvProduct.skupinaProduktu+" does not exist, creating ...")
 	scrapPercentAsFloat, err := strconv.ParseFloat(csvProduct.zmetkovitost, 64)
 	if err != nil {
 		logError("MAIN", "Problem parsing cavity for "+csvProduct.nazevProduktu+": "+csvProduct.kavita)
@@ -144,12 +143,13 @@ func getProductGroupId(csvProduct csvProduct) int {
 	var existingProductGroup productGroup
 	db.Where("Name like ?", csvProduct.skupinaProduktu).Find(&existingProductGroup)
 	if existingProductGroup.OID > 0 {
+		logInfo("MAIN", "Updating roduct group "+csvProduct.skupinaProduktu)
 		existingProductGroup.PrepareTime = prepareTimeAsFloat
 		existingProductGroup.ScrapPercent = scrapPercentAsFloat
 		db.Save(&existingProductGroup)
 		return existingProductGroup.OID
 	}
-
+	logInfo("MAIN", "Product group "+csvProduct.skupinaProduktu+" does not exist, creating ...")
 	var newProductGroup productGroup
 	newProductGroup.Name = csvProduct.skupinaProduktu
 	newProductGroup.PrepareTime = prepareTimeAsFloat
