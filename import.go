@@ -143,7 +143,7 @@ func getProductGroupId(csvProduct csvProduct) int {
 	var existingProductGroup productGroup
 	db.Where("Name like ?", csvProduct.skupinaProduktu).Find(&existingProductGroup)
 	if existingProductGroup.OID > 0 {
-		logInfo("MAIN", "Updating roduct group "+csvProduct.skupinaProduktu)
+		logInfo("MAIN", "Updating product group "+csvProduct.skupinaProduktu)
 		existingProductGroup.PrepareTime = prepareTimeAsFloat
 		existingProductGroup.ScrapPercent = scrapPercentAsFloat
 		db.Save(&existingProductGroup)
