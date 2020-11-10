@@ -18,6 +18,7 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 
 ### Added
 - when found product group id, prepare time and  scrap percent is updated
+- when updating, creating producut group, adding cycle from product
 
 ## [2020.4.1.26] - 2020-10-26
 

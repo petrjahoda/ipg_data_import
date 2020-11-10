@@ -132,6 +132,16 @@ func getProductGroupId(csvProduct csvProduct) int {
 		logError("MAIN", "Problem parsing cavity for "+csvProduct.nazevProduktu+": "+csvProduct.kavita)
 		scrapPercentAsFloat = 0.0
 	}
+	cycleAsInt, err := strconv.Atoi(strings.ReplaceAll(csvProduct.casCyklu, ",", "."))
+	var cycleAsFloat float64
+	if err != nil {
+		cycleAsFloat, err = strconv.ParseFloat(strings.ReplaceAll(csvProduct.casCyklu, ",", "."), 64)
+		if err != nil {
+			cycleAsFloat = 0.0
+		}
+	} else {
+		cycleAsFloat = float64(cycleAsInt)
+	}
 	db, err := gorm.Open(mysql.Open(zapsiConfig), &gorm.Config{})
 	sqlDB, _ := db.DB()
 	defer sqlDB.Close()
@@ -146,6 +156,7 @@ func getProductGroupId(csvProduct csvProduct) int {
 		logInfo("MAIN", "Updating product group "+csvProduct.skupinaProduktu)
 		existingProductGroup.PrepareTime = prepareTimeAsFloat
 		existingProductGroup.ScrapPercent = scrapPercentAsFloat
+		existingProductGroup.Cycle = cycleAsFloat
 		db.Save(&existingProductGroup)
 		return existingProductGroup.OID
 	}
@@ -154,6 +165,7 @@ func getProductGroupId(csvProduct csvProduct) int {
 	newProductGroup.Name = csvProduct.skupinaProduktu
 	newProductGroup.PrepareTime = prepareTimeAsFloat
 	newProductGroup.ScrapPercent = scrapPercentAsFloat
+	existingProductGroup.Cycle = cycleAsFloat
 	db.Save(&newProductGroup)
 	var brandNewProductGroup productGroup
 	db.Where("Name like ?", csvProduct.skupinaProduktu).Find(&brandNewProductGroup)

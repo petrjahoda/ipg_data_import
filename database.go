@@ -42,6 +42,7 @@ func (product) TableName() string {
 type productGroup struct {
 	OID          int     `gorm:"primary_key;column:OID"`
 	Name         string  `gorm:"column:Name"`
+	Cycle        float64 `gorm:"column:Cycle"`
 	PrepareTime  float64 `gorm:"column:PrepareTime"`
 	ScrapPercent float64 `gorm:"column:ScrapPercent"`
 }
