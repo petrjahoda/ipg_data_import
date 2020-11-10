@@ -6,6 +6,6 @@ docker rmi -f petrjahoda/ipg_data_import_service:latest
 docker build -t petrjahoda/ipg_data_import_service:latest .
 docker push petrjahoda/ipg_data_import_service:latest
 
-docker rmi -f petrjahoda/ipg_data_import_service:2020.4.1
-docker build -t petrjahoda/ipg_data_import_service:2020.4.1 .
-docker push petrjahoda/ipg_data_import_service:2020.4.1
+docker rmi -f petrjahoda/ipg_data_import_service:2020.4.2
+docker build -t petrjahoda/ipg_data_import_service:2020.4.2 .
+docker push petrjahoda/ipg_data_import_service:2020.4.2

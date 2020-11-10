@@ -122,18 +122,6 @@ func updateProductInZapsi(csvProduct csvProduct) {
 }
 
 func getProductGroupId(csvProduct csvProduct) int {
-	db, err := gorm.Open(mysql.Open(zapsiConfig), &gorm.Config{})
-	sqlDB, _ := db.DB()
-	defer sqlDB.Close()
-	if err != nil {
-		logError("MAIN", "Problem opening database: "+err.Error())
-		return 1
-	}
-	var existingProductGroup productGroup
-	db.Where("Name like ?", csvProduct.skupinaProduktu).Find(&existingProductGroup)
-	if existingProductGroup.OID > 0 {
-		return existingProductGroup.OID
-	}
 	prepareTimeAsFloat, err := strconv.ParseFloat(csvProduct.casPripravy, 64)
 	if err != nil {
 		logError("MAIN", "Problem parsing cavity for "+csvProduct.nazevProduktu+": "+csvProduct.kavita)
@@ -145,6 +133,23 @@ func getProductGroupId(csvProduct csvProduct) int {
 		logError("MAIN", "Problem parsing cavity for "+csvProduct.nazevProduktu+": "+csvProduct.kavita)
 		scrapPercentAsFloat = 0.0
 	}
+	db, err := gorm.Open(mysql.Open(zapsiConfig), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
+
+	if err != nil {
+		logError("MAIN", "Problem opening database: "+err.Error())
+		return 1
+	}
+	var existingProductGroup productGroup
+	db.Where("Name like ?", csvProduct.skupinaProduktu).Find(&existingProductGroup)
+	if existingProductGroup.OID > 0 {
+		existingProductGroup.PrepareTime = prepareTimeAsFloat
+		existingProductGroup.ScrapPercent = scrapPercentAsFloat
+		db.Save(&existingProductGroup)
+		return existingProductGroup.OID
+	}
+
 	var newProductGroup productGroup
 	newProductGroup.Name = csvProduct.skupinaProduktu
 	newProductGroup.PrepareTime = prepareTimeAsFloat
