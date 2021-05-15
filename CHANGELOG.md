@@ -14,6 +14,12 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 * ```Fixed``` for any bug fixes.
 * ```Security``` in case of vulnerabilities.
 
+## [2021.2.2.15] - 2021-5-15
+
+### Changed
+- directory for csv file
+
+
 ## [2020.4.2.11] - 2020-11-11
 
 ### Added

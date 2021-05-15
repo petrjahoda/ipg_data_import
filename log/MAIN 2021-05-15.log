@@ -1,0 +1,14 @@
+2021-05-15 07:01:44.926   MAIN   INF   Config file does not exist, creating
+2021-05-15 07:01:44.926   MAIN   INF   Directory for config file created
+2021-05-15 07:01:44.926   MAIN   INF   Writing data to JSON file
+2021-05-15 07:01:44.926   MAIN   INF   Data written to config file
+2021-05-15 07:01:44.926   MAIN   INF   IPG Data Import Service [2020.4.2.10] running
+2021-05-15 07:01:44.927   MAIN   INF   Importing process started
+2021-05-15 07:01:44.927   MAIN   INF   Downloading data from Zapsi
+2021-05-15 07:01:44.930   MAIN   ERR   Problem opening database: dial tcp [::1]:3306: connect: connection refused
+2021-05-15 07:01:44.930   MAIN   INF   Downloading data from Csv
+2021-05-15 07:01:44.930   MAIN   INF   Csv data downloaded, time elapsed: 162.101µs
+2021-05-15 07:01:44.931   MAIN   INF   Importing process complete, time elapsed: 3.946592ms
+2021-05-15 07:01:44.931   MAIN   INF   Sleeping for 9m59.995850287s
+2021-05-15 07:01:47.003   MAIN   INF   IPG Data Import Service [2020.4.2.10] stopping...
+2021-05-15 07:01:48.004   MAIN   INF   IPG Data Import Service [2020.4.2.10] stopped
