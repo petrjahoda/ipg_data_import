@@ -19,6 +19,9 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 ### Removed
 - upx usage from windows binary
 
+### Changed
+- directory for csv file on local disk
+
 ## [2021.2.2.15] - 2021-5-15
 
 ### Changed

@@ -281,7 +281,8 @@ func downloadDataFromCsvFile() ([]csvUser, []csvProduct, bool) {
 	timer := time.Now()
 	logInfo("MAIN", "Downloading data from Csv")
 	var files []string
-	root := "\\\\zapsi.ipg.local\\zapsi_ipg_data"
+	//root := "\\\\zapsi.ipg.local\\zapsi_ipg_data"
+	root := "C:\\Zapsi\\zapsi ipg data"
 	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		files = append(files, path)
 		return nil
