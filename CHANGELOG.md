@@ -14,6 +14,11 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 * ```Fixed``` for any bug fixes.
 * ```Security``` in case of vulnerabilities.
 
+## [2021.2.2.17] - 2021-5-17
+
+### Removed
+- upx usage from windows binary
+
 ## [2021.2.2.15] - 2021-5-15
 
 ### Changed

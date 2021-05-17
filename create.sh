@@ -9,7 +9,6 @@ cd ..
 
 GOOS=windows go build -ldflags="-s -w" -o windows/"$name".exe
 cd windows
-upx "$name".exe
 cd ..
 
 docker rmi -f petrjahoda/"$name":latest
